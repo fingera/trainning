@@ -1,7 +1,7 @@
 #include <cstdio>
-#include "coroutine/context.h"
+#include "context.h"
 
-// g++ main.cpp coroutine/context.S && ./a.out
+// g++ main.cpp context.S && ./a.out
 
 using coroutine::Context;
 
