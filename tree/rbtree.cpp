@@ -103,7 +103,7 @@ class RBTree : public BSTree<KEY> {
       node->right.reset(child);
     }
     if (realColor == RED) return;
-    // 退出路径 1. 根节点(所有路径多了一个) 2. 红节点(改成黑则平衡) 3. 去兄弟节点借
+    // 退出路径 缺黑 1. 根节点(整个树缺黑不影响平衡) 2. 红节点(改成黑则平衡) 3. 去兄弟节点借
     while (child != Root() && (!child || child->color == BLACK)) {
       assert(node != nullptr);
       assert(brother != nullptr);
@@ -121,7 +121,7 @@ class RBTree : public BSTree<KEY> {
       }
       auto bLeft = (RBNode *)brother->left.get();
       auto bRight = (RBNode *)brother->right.get();
-      // 2. 兄弟节点的两个子节点是黑色 借完后不好平衡 将黑+黑转移到父节点
+      // 2. 兄弟节点的两个子节点是黑色 借完后不好平衡 将缺黑转移到父节点
       if ((!bLeft || bLeft->color == BLACK) &&
           (!bRight || bRight->color == BLACK)) {
         brother->color = RED;
@@ -148,7 +148,7 @@ class RBTree : public BSTree<KEY> {
             brother = (RBNode *)node->left.get();
           }
         }
-        // 4. 把兄弟节点的黑色借过来 其外侧子孙替换其位置 修改为红色
+        // 4. 把兄弟节点的黑色借过来 其外侧子孙替换其位置修改为黑色补偿这边的黑色
         brother->color = node->color;
         node->color = BLACK;
         if (isLeft) {
