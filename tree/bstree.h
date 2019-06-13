@@ -95,7 +95,7 @@ class BSTree {
     if (node != nullptr) erase(node);
     return node != nullptr;
   }
-  void erase(BSNode *node) {
+  BSNode *erase(BSNode *node) {
     BSNode *child;
     if (!node->left) {
       child = node->right.release();
@@ -117,6 +117,7 @@ class BSTree {
     } else {
       node->parent->right.reset(child);
     }
+    return child;
   }
   void leftRotate(BSNode *node) {
     auto right = node->right.release();
