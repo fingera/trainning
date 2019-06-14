@@ -13,7 +13,7 @@ void pushHeap(SequenceContainer& c, const T& val) {
   c.push_back(val);
   if (c.size() > 1) {
     size_t cur = c.size() - 1;
-    for (size_t p = P(cur); c[cur] < c[p] && cur > 0; p = P(p)) {
+    for (size_t p = P(cur); cur > 0 && c[cur] < c[p]; p = P(p)) {
       std::swap(c[cur], c[p]);
       cur = p;
     }

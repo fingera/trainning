@@ -156,17 +156,17 @@ int main(int argc, char const *argv[]) {
 
   uint8_t key[16] = {0};
   RadixTree<3, int, std::numeric_limits<int>::min()> tree6;
-  for (size_t i = 1; i < sizeof(key) * 8; i++) {
-    tree6.insert(key, i * 3, i);
+  for (size_t i = 3; i < sizeof(key) * 8; i += 3) {
+    tree6.insert(key, i, i);
   }
-  for (size_t i = 1; i < sizeof(key) * 8; i++) {
-    if (tree6.find(key, i * 3) != i) {
+  for (size_t i = 3; i < sizeof(key) * 8; i += 3) {
+    if (tree6.find(key, i) != i) {
       std::cerr << "Bad radix tree3: " << i << std::endl;
     }
-    if (!tree6.remove(key, i * 3)) {
+    if (!tree6.remove(key, i)) {
       std::cerr << "Bad radix tree3 remove: " << i << std::endl;
     }
-    if (tree6.find(key, i * 3) != std::numeric_limits<int>::min()) {
+    if (tree6.find(key, i) != std::numeric_limits<int>::min()) {
       std::cerr << "Bad radix tree3 invalid: " << i << std::endl;
     }
   }

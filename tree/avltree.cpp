@@ -17,9 +17,10 @@ class AVLTree : public BSTree<KEY> {
     AVLNode *Left() { return (AVLNode *)this->left.get(); }
     AVLNode *Right() { return (AVLNode *)this->right.get(); }
     AVLNode *Parent() { return (AVLNode *)this->parent; }
-    int Height() { return this == nullptr ? 0 : height; }
+    int Height() { return height; }
     void adjustHeight() {
-      height = 1 + std::max(Left()->Height(), Right()->Height());
+      height = 1 + std::max(Left() ? Left()->Height() : 0,
+                            Right() ? Right()->Height() : 0);
     }
   };
   AVLNode *leftRotate(AVLNode *node) {
@@ -36,13 +37,19 @@ class AVLTree : public BSTree<KEY> {
   }
   AVLNode *Root() { return (AVLNode *)this->root.get(); }
   AVLNode *balance(AVLNode *node) {
-    if (node->Left()->Height() - node->Right()->Height() > 1) {
-      if (node->Left()->Right()->Height() > node->Left()->Left()->Height()) {
+    auto lh = node->Left() ? node->Left()->Height() : 0;
+    auto rh = node->Right() ? node->Right()->Height() : 0;
+    if (lh - rh > 1) {
+      rh = node->Left()->Right() ? node->Left()->Right()->Height() : 0;
+      lh = node->Left()->Left() ? node->Left()->Left()->Height() : 0;
+      if (rh > lh) {
         leftRotate(node->Left());
       }
       node = rightRotate(node);
-    } else if (node->Right()->Height() - node->Left()->Height() > 1) {
-      if (node->Right()->Left()->Height() > node->Right()->Right()->Height()) {
+    } else if (rh - lh > 1) {
+      rh = node->Right()->Right() ? node->Right()->Right()->Height() : 0;
+      lh = node->Right()->Left() ? node->Right()->Left()->Height() : 0;
+      if (lh > rh) {
         rightRotate(node->Right());
       }
       node = leftRotate(node);
