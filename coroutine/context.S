@@ -7,8 +7,10 @@
 	rax 调用源地址 asmContextCall自动拼接的
 */
 asmContextEntry:
+  // 由于WSL采用了 XMM 优化 而寄存器只有11个 可能因为不对齐造成崩溃 这里padding一下堆栈
 	pushq %rdi
-	movq %rax, %rdi // FIXME: windows movq %rax, %rcx
+	pushq %rdi
+	movq %rax, %rdi
 	call *%rsi
 	movq %rax, %rdi
 	movq 80(%rax), %rcx
@@ -19,17 +21,14 @@ asmContextEntry:
 asmContextCall:
 	leaq 8(%rsp), %rax
 
-	// FIXME: win movq %rcx, %rdi
-	// FIXME: win movq %rdx, %rsi
-
 	// R12 R13 R14 R15 RSI RDI RBP RBX RIP RSP ARGS
 	pushq %rsi // args
 	pushq %rax // ESP
 	pushq -8(%rax) // RIP
 	pushq %rbx
 	pushq %rbp
-	pushq %rdi // For Win
-	pushq %rsi // For Win
+	pushq %rdi
+	pushq %rsi
 	pushq %r15
 	pushq %r14
 	pushq %r13
